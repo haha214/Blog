@@ -239,7 +239,7 @@ module.exports = function(app){
             error: req.flash('error').toString()
         });
     });
-    
+
     app.get('/u/:name', function(req, res) {
         var page = parseInt(req.query.p) || 1;
         //检查用户是否存在
@@ -348,6 +348,10 @@ module.exports = function(app){
         });
     });
 
+    app.use(function(req, res) {
+        res.render("404");
+    });
+    
     function checkLogin(req, res, next) {
         if (!req.session.user) {
             req.flash('error', '未登录!'); 
