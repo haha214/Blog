@@ -352,6 +352,38 @@ module.exports = function(app){
         });
     });
 
+    
+    // 我们需要通过 Post.edit() 返回一篇文章 markdown 格式的文本， 而不是通过 Post.getOne 返回一篇转义后的 HTML 文本， 因为我们还要将修改后的文档存入数据库， 而数据库中应该存储 markdown 格式的文本。
+    app.get('/reprint/:name/:day/:title', checkLogin);
+    app.get('/reprint/:name/:day/:title', function(req, res) {
+        Post.edit(req.params.name, req.params.day, req.params.title, function(err, post) {
+            if (err) {
+                req.flash('error', err);
+                return res.redirect(back);
+            }
+            var currentUser = req.session.user,
+                reprint_from = {
+                    name: post.name,
+                    day: post.time.day,
+                    title: post.title
+                },
+                reprint_to = {
+                    name: currentUser.name,
+                    head: currentUser.head
+                };
+            Post.reprint(reprint_from, reprint_to, function(err, post) {
+                if (err) {
+                    req.flash('error', err);
+                    return res.redirect('back');
+                }
+                req.flash('success', '转载成功!');
+                var url = encodeURI('/u/' + post.name + '/' + post.time.day + '/' + post.title);
+                //跳转到转载后的文章页面
+                res.redirect(url);
+            });
+        });
+    });
+
     app.use(function(req, res) {
         res.render("404");
     });
