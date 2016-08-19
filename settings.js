@@ -1,7 +1,5 @@
 
 module.exports = {
     cookieSecret:'myblog',
-    db:'db',
-    host:'localhost',
-    port:27017
+    url:'mongodb://haha214:19900214@ds161225.mlab.com:61225/haha214'
 }

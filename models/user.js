@@ -1,4 +1,4 @@
-var mongodb = require('mongodb').Db;
+var mongodb = require('mongodb').MongoClient;
 var settings = require('../settings');
 var crypto = require('crypto');
 
